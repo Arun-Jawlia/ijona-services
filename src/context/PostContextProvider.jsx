@@ -12,7 +12,7 @@ const PostContextProvider = ({children}) => {
 
 
   return (
-    <PostContext.Provider value={{post, setPost}}>
+    <PostContext.Provider value={{post,setPost}}>
         {children}
     </PostContext.Provider>
   )

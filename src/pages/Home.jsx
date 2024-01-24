@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Table,
   Thead,
@@ -14,46 +14,75 @@ import {
   Flex
 } from "@chakra-ui/react";
 import Pagination from "../components/Pagination";
+import { AuthContext } from "../context/AuthContextProvider";
+import PostModal from "../components/PostModal";
+import axios from 'axios'
+import { BaseUrl } from "../api";
+import { PostContext } from "../context/PostContextProvider";
+import EditModal from "../components/EditModal";
 
-const data = [
-    {
-        id:1,
-    name:'Arun',
-    email:"arun@gmail.com",
 
-},
-    {
-        id:2,
-    name:'Arun',
-    email:"arun@gmail.com",
 
-},
-    {
-        id:3,
-    name:'Arun',
-    email:"arun@gmail.com",
-
-},
-    {
-        id:4,
-    name:'Arun',
-    email:"arun@gmail.com",
-
+export const getpost = ()=>
+{
+ return axios.get(`${BaseUrl}/post`)
+ .then(res=>
+  {
+    return res
+  })
 }
-]
-
 const Home = () => {
 
+  const {currentEmail} = useContext(AuthContext)
+  const [showModal , setShowModal] = useState(false)
+  const {post, setPost} = useContext(PostContext)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [delId, setDelId] = useState('')
+
+
+  useEffect(()=>
+  {
+    getpost().then(res=>
+      {
+        console.log(res.data)
+        setPost(res.data)
+      })
+  },[])
+
     
+
+  const handleDelete = (id)=>
+  {
+    axios.delete(`${BaseUrl}/post/${id}`)
+    .then(res=>
+      {
+        getpost()
+        .then(res=>
+          {
+            setPost(res.data)
+          })
+      })
+
+  }
+
+const handleEdit = (id)=>
+{
+  setShowEditModal(true)
+  setDelId(id)
+}
+
 
 
   return (
     <Container p="1rem"  maxW={['100%',"100%",'100%']} height="80vh">
         <Flex mb='1rem' align='center' justify='space-between'>
         <Text textAlign='center' fontSize='2xl' >User</Text>
-            <Button>Add</Button>
+            <Button onClick={()=>setShowModal(true)} >Add</Button>
+            <PostModal showModal={showModal} setShowModal={setShowModal} />
         </Flex>
-      <TableContainer mb='1rem'>
+      {
+        post.length>0 ? (
+          <TableContainer mb='1rem'>
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -66,24 +95,34 @@ const Home = () => {
           </Thead>
           <Tbody>
            {
-            data?.map((elem)=>
+        
+            post?.map((elem,index)=>
             {
                 return(
-                    <Tr key={elem.id}>
-                    <Td>{elem.id}</Td>
+                    <Tr key={elem._id}>
+                    <Td>{index+1}</Td>
                     <Td>{elem.name}</Td>
                     <Td>{elem.email}</Td>
-                    <Td><Button>Edit</Button></Td>
-                    <Td><Button>Delete</Button></Td>
+                    <Td><Button onClick={()=>handleEdit(elem._id)}>Edit</Button></Td>
+                    <EditModal showEditModal={showEditModal} id={delId}  setShowEditModal={setShowEditModal} />
+                    <Td><Button onClick={()=>handleDelete(elem._id)}>Delete</Button></Td>
                   </Tr>
                 )
             })
-           }
+          
+          
+           } 
           
           </Tbody>
         
         </Table>
       </TableContainer>
+        ) : (
+          <Text m='1rem' textAlign='center' fontSize='xl'>
+            No Data Found
+          </Text>
+        )
+      }
       <Pagination/>
     </Container>
   );
