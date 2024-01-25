@@ -23,16 +23,28 @@ const Login = () => {
   const { handleLogin } = useContext(AuthContext);
 
   const handleUserLogin = () => {
+
+  try {
     if (email && password) {
       const payload = {
         email,
         password,
       };
       axios.post(`${BaseUrl}/user/login`, payload).then((res) => {
-        handleLogin(res?.data?.access_token , res?.data?.otherDetails?.email)
-        navigate('/')
+        if(res?.data?.access_token)
+        {
+          handleLogin(res?.data?.access_token , res?.data?.otherDetails?.email)
+          navigate('/')
+        }else{
+          alert('Wrong Credantials')
+        }
+
       });
     }
+  } catch (error) {
+    console.log(error.response.data.status)
+
+  }
   };
 
   const isErrorEmail = email === "";

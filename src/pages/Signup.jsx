@@ -9,6 +9,7 @@ import {
   FormHelperText,
   FormErrorMessage,
   Button,
+  useToast
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContextProvider";
@@ -19,6 +20,7 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const toast = useToast()
 
 
 
@@ -29,18 +31,24 @@ const Signup = () => {
       const payload = {
         email, password
       }
-      axios.post(`${BaseUrl}/user/signup`,payload)
-      .then((res)=>
-      {
-       if(res.data.access_token)
-       {
-        navigate('/login')
-       }
-       else{
-        alert('something went wrong')
-       }
+
+      try {
+        axios.post(`${BaseUrl}/user/signup`,payload)
+        .then((res)=>
+        {
+  
+  
+          console.log(res.data)
+         if(!res?.data?.access_token)
+         {
+          navigate('/login')
+         }
         
-      })
+        })
+      } catch (error) {
+         console.log(error)
+      }
+    
     }
   }
 
