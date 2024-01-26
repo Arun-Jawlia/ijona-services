@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {Box, Button, Flex} from '@chakra-ui/react'
 
 const Pagination = ({page, setPage, totalLength}) => {
-  console.log(totalLength)
   return (
     <Box width='100%' >
        <Flex alignItems="center" justifyContent='center' gap='1rem'>

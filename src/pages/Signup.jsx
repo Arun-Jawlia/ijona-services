@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, {  useState } from "react";
 import {
-  Box,
   Container,
   Text,
   FormControl,
@@ -9,50 +8,40 @@ import {
   FormHelperText,
   FormErrorMessage,
   Button,
-  useToast
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContextProvider";
-import axios from 'axios'
+import axios from "axios";
 import { BaseUrl } from "../api";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const toast = useToast()
 
-
-
-  const handleUserSignup=()=>
-  {
-    if(email && password)
-    {
+  const handleUserSignup = () => {
+    if (!email && !password) {
+      alert("Please enter all credentials!");
+    } else if (!email.includes("@gmail.com") &&  password.length>=3 ) {
+      alert("Enter a valid email. Email should have @gmail.com");
+    } else if (email.includes("@gmail.com") && password.length <= 3) {
+      alert("Password must be at least 3 characters");
+    } else if (email.includes("@gmail.com") && password.length>3) {
       const payload = {
-        email, password
-      }
-
+        email,
+        password,
+      };
       try {
-        axios.post(`${BaseUrl}/user/signup`,payload)
-        .then((res)=>
-        {
-  
-  
-          console.log(res.data)
-         if(!res?.data?.access_token)
-         {
-          navigate('/login')
-         }
-        
-        })
+        axios.post(`${BaseUrl}/user/signup`, payload).then((res) => {
+          console.log(res.data);
+          if (res?.data?.userData?.email) {
+            navigate("/login");
+          }
+        });
       } catch (error) {
-         console.log(error)
+        console.log(error);
       }
-    
     }
-  }
-
-
+  };
 
   const isErrorEmail = email === "";
   const isErrorPassword = password === "";

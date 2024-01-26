@@ -5,8 +5,6 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContextProvider";
 function App() {
 
   return (

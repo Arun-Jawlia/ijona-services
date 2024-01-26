@@ -24,7 +24,11 @@ const PostModal = ({ showModal, setShowModal }) => {
 
   const handleAddData = ()=>
   {
-    if(name,email)
+    if(!name && !email)
+    {
+      alert('Enter required field')
+    }
+    else if(name && email.includes('@gmail.com'))
     {
         const payload = { name, email}
         axios.post(`${BaseUrl}/post/create`,payload)
@@ -36,9 +40,11 @@ const PostModal = ({ showModal, setShowModal }) => {
                 getpost()
                 .then(res=>
                     {
-                        setPost(res.data)
+                        setPost(res?.data?.posts)
                     })
             })
+    }else{
+      alert('Enter a valid email. Email should have @gmail.com')
     }
   }
 

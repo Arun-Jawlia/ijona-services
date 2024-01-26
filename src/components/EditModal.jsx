@@ -17,7 +17,7 @@ import { BaseUrl } from "../api";
 import { getpost } from "../pages/Home";
 import { PostContext } from "../context/PostContextProvider";
 
-const EditModal = ({ showEditModal, setShowEditModal, id }) => {
+const EditModal = ({ showEditModal, setShowEditModal, id, setDelId }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const { post, setPost } = useContext(PostContext);
@@ -32,8 +32,8 @@ const EditModal = ({ showEditModal, setShowEditModal, id }) => {
   };
 
   useEffect(() => {
-    getPostById();
-  }, [id]);
+    getPostById()
+  }, [id])
 
   //   Function to update choose post
   const handleEditData = () => {
@@ -43,8 +43,9 @@ const EditModal = ({ showEditModal, setShowEditModal, id }) => {
         setName("");
         setEmail("");
         setShowEditModal(false);
+        setDelId('')
         getpost().then((res) => {
-          setPost(res.data);
+          setPost(res?.data?.posts);
         });
       });
     }

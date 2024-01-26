@@ -6,12 +6,12 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
   Container,
   Button,
   Text,
   Flex,
+  Spinner
 } from "@chakra-ui/react";
 import Pagination from "../components/Pagination";
 import { AuthContext } from "../context/AuthContextProvider";
@@ -32,18 +32,23 @@ const Home = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [delId, setDelId] = useState("");
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     getpost(page).then((res) => {
-      console.log(res.data);
-      setPost(res.data);
+      // console.log(res?.data);
+      setLoading(false);
+      setPost(res?.data?.posts);
     });
   }, [page]);
 
   const handleDelete = (id) => {
+    setLoading(true)
     axios.delete(`${BaseUrl}/post/${id}`).then((res) => {
       getpost().then((res) => {
-        setPost(res.data);
+        setLoading(false)
+        setPost(res?.data?.posts);
       });
     });
   };
@@ -60,9 +65,19 @@ const Home = () => {
           User
         </Text>
         <Button onClick={() => setShowModal(true)}>Add</Button>
-        <PostModal showModal={showModal} setShowModal={setShowModal} />
+        <PostModal showModal={showModal}  setShowModal={setShowModal} />
       </Flex>
-      {post.length > 0 ? (
+      {loading ? (
+        <Text textAlign={'center'}>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        </Text>
+      ) : post?.length > 0 ? (
         <TableContainer mb="1rem">
           <Table variant="simple">
             <Thead>
@@ -87,6 +102,7 @@ const Home = () => {
                     <EditModal
                       showEditModal={showEditModal}
                       id={delId}
+                      setDelId={setDelId}
                       setShowEditModal={setShowEditModal}
                     />
                     <Td>

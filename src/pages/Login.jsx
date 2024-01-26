@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import {
-  Box,
   Container,
   Text,
   FormControl,
@@ -23,28 +22,31 @@ const Login = () => {
   const { handleLogin } = useContext(AuthContext);
 
   const handleUserLogin = () => {
-
-  try {
-    if (email && password) {
-      const payload = {
-        email,
-        password,
-      };
-      axios.post(`${BaseUrl}/user/login`, payload).then((res) => {
-        if(res?.data?.access_token)
-        {
-          handleLogin(res?.data?.access_token , res?.data?.otherDetails?.email)
-          navigate('/')
-        }else{
-          alert('Wrong Credantials')
-        }
-
-      });
+    try {
+      if (!email && !password) {
+        alert("Please enter all credentials!");
+      } else if (!email.includes("@gmail.com")) {
+        alert("Enter a valid email. Email should have @gmail.com");
+      } else if (email.includes("@gmail.com") && password.length <= 3) {
+        alert("Password must be at least 4 characters");
+      } else if (email.includes("@gmail.com") && password.length >= 3) {
+        const payload = {
+          email,
+          password,
+        };
+        axios.post(`${BaseUrl}/user/login`, payload).then((res) => {
+          console.log(res.data);
+          if (res?.data?.access_token) {
+            localStorage.setItem('access_token', res.data.access_token);
+            localStorage.setItem('email', res?.data?.userData?.email);
+            handleLogin(res?.data?.access_token, res?.data?.userData?.email);
+            navigate("/");
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error.response.data.status)
-
-  }
   };
 
   const isErrorEmail = email === "";
@@ -87,6 +89,7 @@ const Login = () => {
         color="blue.300"
         variant="link"
         width="full"
+        
       >
         New User ! Click Me
       </Button>
