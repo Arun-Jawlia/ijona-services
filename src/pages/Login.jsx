@@ -34,15 +34,25 @@ const Login = () => {
           email,
           password,
         };
-        axios.post(`${BaseUrl}/user/login`, payload).then((res) => {
-          console.log(res.data);
-          if (res?.data?.access_token) {
-            localStorage.setItem('access_token', res.data.access_token);
-            localStorage.setItem('email', res?.data?.userData?.email);
-            handleLogin(res?.data?.access_token, res?.data?.userData?.email);
-            navigate("/");
-          }
-        });
+        axios
+          .post(`${BaseUrl}/user/login`, payload)
+          .then((res) => {
+            console.log(res.data);
+            if (res?.data?.access_token) {
+              localStorage.setItem("access_token", res.data.access_token);
+              localStorage.setItem("email", res?.data?.userData?.email);
+              handleLogin(res?.data?.access_token, res?.data?.userData?.email);
+              navigate("/");
+            }
+          })
+          .catch((err) => {
+            // console.log(err)
+            if (err?.response?.status === 400) {
+              alert("Wrong Credentials! Please Enter correct information");
+            } else if (err?.response?.status === 404) {
+              alert("User not found! Please register yourself");
+            }
+          });
       }
     } catch (error) {
       console.log(error);
@@ -89,7 +99,6 @@ const Login = () => {
         color="blue.300"
         variant="link"
         width="full"
-        
       >
         New User ! Click Me
       </Button>

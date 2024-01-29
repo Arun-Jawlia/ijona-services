@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
   Container,
   Text,
@@ -21,22 +21,29 @@ const Signup = () => {
   const handleUserSignup = () => {
     if (!email && !password) {
       alert("Please enter all credentials!");
-    } else if (!email.includes("@gmail.com") &&  password.length>=3 ) {
+    } else if (!email.includes("@gmail.com") && password.length >= 3) {
       alert("Enter a valid email. Email should have @gmail.com");
     } else if (email.includes("@gmail.com") && password.length <= 3) {
-      alert("Password must be at least 3 characters");
-    } else if (email.includes("@gmail.com") && password.length>3) {
+      alert("Password must be at least 4 characters");
+    } else if (email.includes("@gmail.com") && password.length > 3) {
       const payload = {
         email,
         password,
       };
       try {
-        axios.post(`${BaseUrl}/user/signup`, payload).then((res) => {
-          console.log(res.data);
-          if (res?.data?.userData?.email) {
-            navigate("/login");
-          }
-        });
+        axios
+          .post(`${BaseUrl}/user/signup`, payload)
+          .then((res) => {
+            // console.log(res.data);
+            if (res?.data?.userData?.email) {
+              navigate("/login");
+            }
+          })
+          .catch((err) => {
+            if (err?.response?.data?.status === 404) {
+              alert("User is already registerd! Please Login");
+            }
+          });
       } catch (error) {
         console.log(error);
       }
