@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 function App() {
 
+  // This is for testing 
+
   return (
     <Box height="fit-content" width="100%">
       <BrowserRouter>
