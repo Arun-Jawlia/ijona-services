@@ -11,6 +11,7 @@ function App() {
     <Box height="fit-content" width="100%">
       <BrowserRouter>
         <Box>
+          {/* Import Navbar here */}
           <Navbar />
         </Box>
         <Box>

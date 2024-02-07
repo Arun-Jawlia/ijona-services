@@ -37,7 +37,7 @@ const Home = () => {
   useEffect(() => {
     setLoading(true);
     getpost(page).then((res) => {
-      // console.log(res?.data);
+      console.log(res?.data);
       setLoading(false);
       setPost(res?.data?.posts);
     });
@@ -56,6 +56,7 @@ const Home = () => {
   const handleEdit = (id) => {
     setShowEditModal(true);
     setDelId(id);
+    
   };
 
   return (
